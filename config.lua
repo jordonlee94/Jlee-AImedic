@@ -1,61 +1,79 @@
 Config = {}
 
--- Core & models
-Config.TaxiModel = 'taxi'
-Config.DriverModel = 'A_M_M_Indian_01'
-Config.TaxiSpeed = 120.0  -- Increased for faster taxi service
-Config.DrivingStyle = 2883621 -- Ignores traffic lights and drives aggressively through obstacles
+-- Billing / cost
+-- Billing amounts (separate for NPC revive vs ambulance transport)
+Config.CostNPC = 500 -- charged when NPC medic revives the player
+Config.CostAmbulance = 1000 -- charged when ambulance completes drop-off
 
--- Fare settings
-Config.Fare = {
-    BaseFare = 50,       -- base fare in $
-    RatePerKm = 8.0,     -- $ per km
-    TimeoutRefundPercent = 50, -- percent refunded on timeout
-    AverageSpeedKmH = 80 -- used for ETA preview
-}
+-- Menu configuration: "qb" for qb-menu, "custom" for NUI
+Config.MenuType = "custom" -- options: "qb", "custom"
 
--- Timeout & arrival
-Config.TeleportOnTimeout = true
-Config.TimeoutSeconds = 240 -- seconds before teleport
-Config.ArrivalRadius = 25.0 -- meters arrival radius (default)
-Config.SafeSpawnOffset = 5.0 -- safe teleport offset meters
-Config.SpawnDistance = 3.0 -- spawn distance in front of player
+-- Job and ambulance availability rules
+Config.AmbulanceJobName = "ambulance"
+Config.RequiredAmbulancesOnline = 1 -- if this many or more are on-duty, only ambulance job can use /medic
 
--- Anti-stuck
-Config.AntiStuck = {
-    Enabled = true,
-    CheckInterval = 2000, -- ms between checks (reduced from 5000 for faster detection)
-    MaxAttempts = 3,
-    SlowThreshold = 2.0, -- m movement threshold considered stuck
-    RepositionDistance = 12.0 -- meters to attempt reposition forward
-}
+-- Medic ped options
+Config.MedicPed = "s_m_m_paramedic_01"
+Config.MedicPedFallbacks = { "s_m_m_paramedic_01", "u_m_m_joeschmoe" }
 
--- Cooldowns (seconds)
-Config.Cooldowns = {
-    Watch = 600,   -- 10 minutes
-    Skip = 1200,   -- 20 minutes
-    Global = 300,  -- 5 minutes between any uses
-}
+-- CPR / timings
+Config.CPRDuration = 15000 -- ms
+Config.ProgressFallbackInterval = 500
 
--- UI / HUD
-Config.ShowETA = true
-Config.ShowFarePopup = true
-Config.WatchCooldown = Config.Cooldowns.Watch
+-- Spawn / approach
+Config.SpawnOffset = vector3(3.0, 0.0, 0.0)
+Config.FindRadius = 5.0
+Config.MedicApproachDistance = 2.0
+Config.MedicApproachTimeout = 8000
 
--- Effects & sounds
-Config.EnableFadeTransition = true
-Config.PlayArrivalSound = true
-Config.PlayFadeSound = true
-Config.SoundEffects = true
-Config.AnimatedPopups = true
+-- Limits / debugging
+Config.Prefix = "[AI Medic]"
+-- legacy: keep for backward compatibility
+Config.Cooldown = 600
+Config.MedicCooldown = 600 -- seconds, default 10 minutes
+Config.Debug = false
+Config.MaxSimultaneousMedics = 7
+Config.BypassJobs = { "ambulance", "police" }
 
--- Debug
-Config.Debug = true
+-- Jobs exempt from billing (no charge when using NPC or ambulance)
+Config.BillingExemptJobs = { Config.AmbulanceJobName, "police" }
 
--- Preset locations (dynamic editable)
-Config.PresetLocations = {
-    { name = "Legion Square", coords = vector3(239.63, -781.33, 30.63) },
-    { name = "Sandy Shores", coords = vector3(1862.34, 3687.56, 33.67) },
-    { name = "Paleto Bay", coords = vector3(-208.34, 6218.13, 31.49) },
-    { name = "PDM", coords = vector3(-1038.05, -1529.39, 4.98) },
-}
+-- Logging / webhooks
+Config.EnableLogging = true
+Config.EnableFileLogging = false
+Config.WebhookURL = ""
+
+-- Heartbeat sound configuration (used during revive)
+Config.HeartbeatSoundName = 'Beep_Red'
+Config.HeartbeatSoundSet = 'DLC_HEIST_HACKING_SNAKE_SOUNDS'
+Config.HeartbeatInterval = 1000 -- ms between beats
+Config.UseSoundFallbacks = true -- try alternate playback methods
+
+-- Ambulance arrival song (MP3 resource name, lowercase)
+Config.AmbulanceArrivalSong = 'medic_song'
+Config.AmbulanceArrivalSongSet = '' -- optional soundset, leave empty for frontend fallback
+
+-- Call rules
+Config.AllowCallWhenNotMarkedDown = false
+Config.MaxCallDistance = 100.0
+Config.EnforceMaxCallDistance = false
+Config.BlockWhenInVehicle = true
+Config.BlockWhenSpectating = true
+Config.MaxConcurrentCallsPerTarget = 1
+Config.CallerRateWindow = 60
+Config.CallerMaxCallsPerWindow = 3
+Config.PaymentMethods = { 'bank', 'cash' }
+
+-- Ambulance AI settings
+Config.AmbulanceModel = 'ambulance'
+Config.DriverModel = 's_m_m_paramedic_01'
+Config.AmbulanceDropOff1 = vector3(292.45, -582.97, 43.19)
+Config.AmbulanceDropOff2 = vector3(315.77, -591.50, 43.19)
+Config.AmbulanceStuckTimeout = 120 -- seconds before considered stuck
+Config.AmbulanceOverallTimeout = 300 -- seconds overall timeout before fallback
+Config.SpawnDistance = 30.0
+Config.PickupRadius = 4.5
+Config.SeatIndices = {2,1,0}
+Config.AmbulancePostPickupLife = 10000 -- ms after pickup before driving to dropoff1 (shortened to ~10s)
+Config.AmbulanceAfterDropoff2Life = 20000 -- ms after final dropoff before cleanup
+return Config

@@ -1,27 +1,17 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'JLeeGaming)'
-description 'QB-Core AI Taxi (v11) - confirmation modal, animated popups, anti-stuck'
-version '11.0.0'
+author 'Jlee-NpcMedic'
+description 'NPC Medic and Ambulance AI with working MP3 NUI audio'
+version '1.0.0'
 
+client_script 'client.lua'
+server_script 'server.lua'
 shared_script 'config.lua'
-
-client_scripts {
-    'client/client.lua'
-}
-
-server_scripts {
-    '@qb-core/shared/locale.lua',
-    'server/server.lua'
-}
 
 ui_page 'html/index.html'
 
 files {
-    'html/*'
-}
-
-dependencies {
-    'qb-core'
+    'html/index.html',
+    'html/sounds/medic_song.mp3'
 }
